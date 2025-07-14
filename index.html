@@ -88,14 +88,16 @@
             <p class="text-slate-600 mt-2">Preencha o formulário para garantir a sua vaga.</p>
         </header>
 
-        <!-- Success Message -->
-        <div id="success-message" class="hidden text-center py-12 bg-green-100 rounded-lg border border-green-300">
-            <div class="text-6xl mb-4">🎉</div>
-            <h2 class="text-3xl font-bold text-green-800">Inscrição Enviada!</h2>
-            <p class="text-green-700 mt-2 max-w-md mx-auto">Obrigado pelo seu interesse! Entraremos em contacto em breve com os próximos passos. Os detalhes da sua inscrição foram enviados para <span class="font-semibold">hanzdomingos@gmail.com</span>. A sua jornada no Excel está prestes a começar!</p>
-        </div>
+        <!-- The success message is now in success.html -->
+        <!-- <div id="success-message" class="hidden ..."> ... </div> -->
 
-        <form id="registration-form" class="space-y-8">
+        <form id="registration-form" action="https://formspree.io/f/movlakpo" method="POST" class="space-y-8">
+            <!-- Hidden fields for Formspree -->
+            <input type="hidden" name="_replyto" id="formspree-replyto" value="">
+            <input type="hidden" name="_subject" value="Nova Inscrição no Curso de Excel do Professor Hanz Domingos">
+            <!-- IMPORTANT: Replace 'yourusername' and 'your-repo-name' with your actual GitHub Pages URL -->
+            <input type="hidden" name="_next" value="https://yourusername.github.io/your-repo-name/success.html">
+
             <!-- Section 1: Personal Info & Level -->
             <section class="space-y-6">
                 <h2 class="text-2xl font-semibold text-emerald-800 border-b-2 border-emerald-200 pb-2">1. Sobre Si</h2>
@@ -284,13 +286,13 @@
             };
 
             const registrationForm = document.getElementById('registration-form');
-            const successMessage = document.getElementById('success-message');
+            // const successMessage = document.getElementById('success-message'); // Removed as it's now in success.html
             const summaryContainer = document.getElementById('summary-content');
             const fileNameDisplay = document.getElementById('fileName');
             const submitBtn = document.getElementById('submitBtn');
 
-            // Define the target email address
-            const targetEmail = 'hanzdomingos@gmail.com';
+            // Define the target email address for Formspree's _replyto
+            const targetEmail = 'hanzdomingos@gmail.com'; // This is for internal use/Formspree's _replyto
 
             // Error message elements
             const errorMessages = {
@@ -486,91 +488,29 @@
                 `;
             }
 
-            registrationForm.addEventListener('submit', async (e) => {
-                e.preventDefault(); 
+            registrationForm.addEventListener('submit', (e) => { // Removed 'async' and 'await'
+                // Set the _replyto hidden input value from the email field BEFORE validation
+                document.getElementById('formspree-replyto').value = formData.email;
 
-                if (validateForm()) {
-                    submitBtn.textContent = 'A Enviar...';
-                    submitBtn.classList.add('submit-button-loading');
-                    submitBtn.disabled = true;
-
-                    // Prepare data for sending
-                    const dataToSend = {
-                        to: targetEmail,
-                        subject: `Nova Inscrição no Curso de Excel de ${formData.fullName}`,
-                        body: `
-                            Detalhes da Inscrição:
-                            Nome Completo: ${formData.fullName}
-                            Email: ${formData.email}
-                            Telefone: ${formData.phone}
-                            Nível de Excel: ${formData.level}
-                            Formato da Aula: ${formData.classFormat}
-                            Horário Preferencial: ${formData.schedule}
-                            Como Soube do Curso: ${formData.howHeard}
-                            Motivação: ${formData.motivation || 'N/A'}
-                            Termos e Condições Aceites: ${formData.terms ? 'Sim' : 'Não'}
-                        `
-                    };
-
-                    // Simulate network delay for email sending
-                    await new Promise(resolve => setTimeout(resolve, 1500)); 
-
-                    // Log data to console (simulating email sending)
-                    console.log('Dados do formulário prontos para envio por email:', dataToSend);
-                    console.log(`Um e-mail seria enviado para: ${targetEmail}`);
-
-                    // --- Placeholder for actual email sending via a backend service ---
-                    /*
-                    try {
-                        const response = await fetch('/api/send-email', { // Replace with your backend endpoint
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(dataToSend),
-                        });
-
-                        if (response.ok) {
-                            console.log('E-mail enviado com sucesso!');
-                        } else {
-                            console.error('Falha ao enviar e-mail:', response.statusText);
-                            // Handle error, e.g., show an error message to the user
-                        }
-                    } catch (error) {
-                        console.error('Erro de rede ao tentar enviar e-mail:', error);
-                        // Handle network error
-                    }
-                    */
-                    // --- End of placeholder ---
-
-                    // Show success message and hide form
-                    registrationForm.classList.add('hidden');
-                    successMessage.classList.remove('hidden');
-                    
-                    // Update the email in the success message
-                    successMessage.querySelector('span').textContent = targetEmail;
-
-                    // Reset the form and chart state
-                    registrationForm.reset();
-                    fileNameDisplay.textContent = 'Nenhum ficheiro selecionado. PNG, JPG, PDF até 10MB.';
-                    formData.level = null;
-                    formData.classFormat = null;
-                    formData.schedule = null;
-                    formData.terms = false;
-                    formData.proof = null;
-                    levelChart.data.datasets[0].backgroundColor = levelChart.data.datasets[0].backgroundColor.map(() => 'rgba(16, 185, 129, 0.2)'); 
-                    levelChart.data.datasets[0].borderColor = levelChart.data.datasets[0].borderColor.map(() => 'rgba(16, 185, 129, 1)'); 
-                    levelChart.update();
-
-                } else {
-                    // If validation fails, update summary to show current (possibly incomplete) data
-                    updateSummary();
+                if (!validateForm()) {
+                    e.preventDefault(); // Prevent default submission if validation fails
                     // Scroll to the first error or top of the form
                     const firstError = document.querySelector('.error-message:not(.hidden)');
                     if (firstError) {
                         firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
+                    updateSummary(); // Update summary with current (possibly incomplete) data
+                    return; // Stop execution
                 }
+
+                // If validation passes, allow the form to submit naturally to Formspree
+                // Formspree will handle the redirection to the _next page.
+                // Add loading state to button *before* natural submission
+                submitBtn.textContent = 'A Enviar...';
+                submitBtn.classList.add('submit-button-loading');
+                submitBtn.disabled = true;
+
+                // No further client-side JS needed for submission success, Formspree handles redirect.
             });
 
             // Update summary dynamically as user types/selects
