@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscrição: Curso de Excel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0fdf4; /* emerald-50, slightly lighter for a serene feel */
+        }
+        .form-radio-card {
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .form-radio-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        input:checked + .form-radio-card {
+            border-color: #059669; /* emerald-600 */
+            background-color: #ecfdf5; /* emerald-50 */
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.3); /* Ring effect on selection */
+            border-width: 3px; /* Thicker border on selection */
+        }
+        .chart-container { 
+            position: relative; 
+            width: 100%; 
+            max-width: 600px; 
+            margin-left: auto; 
+            margin-right: auto; 
+            height: 150px;
+            max-height: 200px;
+        }
+        @media (min-width: 768px) { 
+            .chart-container { 
+                height: 200px; 
+            } 
+        }
+        .error-message {
+            color: #dc2626; /* Red 600 */
+            font-size: 0.875rem; /* text-sm */
+            margin-top: 0.25rem; /* mt-1 */
+            font-weight: 500; /* Medium font weight for emphasis */
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #059669; /* emerald-600 */
+            box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.3); /* Emerald focus ring */
+            outline: none;
+        }
+        .submit-button-loading {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        /* Custom animation for welcome emoji */
+        @keyframes bounce-subtle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .animate-bounce-subtle {
+            animation: bounce-subtle 1.5s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-emerald-50 text-slate-800 flex items-center justify-center min-h-screen p-4">
+
+    <main class="w-full max-w-4xl bg-white rounded-xl shadow-lg p-6 md:p-10 space-y-8">
+        
+        <header class="text-center mb-8">
+            <!-- Creative Welcome Section -->
+            <div class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white p-6 rounded-lg shadow-md mb-6 transform hover:scale-105 transition-transform duration-300">
+                <div class="text-5xl mb-3 animate-bounce-subtle">📊✨</div>
+                <h1 class="text-3xl md:text-4xl font-bold">Bem-vindo(a) ao Curso de Excel com o Professor Hanz Domingos!</h1>
+                <p class="text-lg mt-2 opacity-90">Desvende o poder dos dados e impulsione a sua carreira.</p>
+            </div>
+            
+            <!-- Motivational Message -->
+            <div class="text-center text-slate-700 italic px-4 py-3 bg-emerald-100 rounded-lg shadow-sm mb-8">
+                <p class="text-base md:text-lg font-medium">"O Excel é mais do que uma folha de cálculo; é a sua tela para a inovação. Prepare-se para transformar números em histórias de sucesso!"</p>
+            </div>
+
+            <h2 class="text-3xl md:text-4xl font-bold text-emerald-800">Inscrição no Curso de Excel</h2>
+            <p class="text-slate-600 mt-2">Preencha o formulário para garantir a sua vaga.</p>
+        </header>
+
+        <!-- Success Message -->
+        <div id="success-message" class="hidden text-center py-12 bg-green-100 rounded-lg border border-green-300">
+            <div class="text-6xl mb-4">🎉</div>
+            <h2 class="text-3xl font-bold text-green-800">Inscrição Enviada!</h2>
+            <p class="text-green-700 mt-2 max-w-md mx-auto">Obrigado pelo seu interesse! Entraremos em contacto em breve com os próximos passos. Os detalhes da sua inscrição foram enviados para <span class="font-semibold">hanzdomingos@gmail.com</span>. A sua jornada no Excel está prestes a começar!</p>
+        </div>
+
+        <form id="registration-form" class="space-y-8">
+            <!-- Section 1: Personal Info & Level -->
+            <section class="space-y-6">
+                <h2 class="text-2xl font-semibold text-emerald-800 border-b-2 border-emerald-200 pb-2">1. Sobre Si</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="fullName" class="block text-sm font-medium text-slate-700 mb-1">Nome Completo</label>
+                        <input type="text" id="fullName" name="fullName" class="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500" placeholder="O seu nome completo" required>
+                        <p id="fullName-error" class="error-message hidden">Por favor, insira o seu nome completo.</p>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Endereço de E-mail</label>
+                        <input type="email" id="email" name="email" class="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500" placeholder="seu.email@exemplo.com" required>
+                        <p id="email-error" class="error-message hidden">Por favor, insira um e-mail válido.</p>
+                    </div>
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-slate-700 mb-1">Número de Telefone</label>
+                        <input type="tel" id="phone" name="phone" class="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500" placeholder="+258 8XXXXXXXX" required>
+                        <p id="phone-error" class="error-message hidden">Por favor, insira o seu número de telefone.</p>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Qual é o seu nível atual de conhecimento em Excel?</label>
+                    <div class="grid sm:grid-cols-3 gap-4">
+                        <div>
+                            <input type="radio" name="level" id="level-basico" value="Básico" class="hidden">
+                            <label for="level-basico" class="form-radio-card flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg cursor-pointer h-full">
+                                <span class="text-3xl mb-2">●</span>
+                                <span class="font-semibold">Básico</span>
+                                <span class="text-xs text-slate-500 mt-1">Para quem quer aprender os fundamentos.</span>
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" name="level" id="level-intermediario" value="Intermediário" class="hidden">
+                            <label for="level-intermediario" class="form-radio-card flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg cursor-pointer h-full">
+                                <span class="text-3xl mb-2">●●</span>
+                                <span class="font-semibold">Intermediário</span>
+                                <span class="text-xs text-slate-500 mt-1">Para aprofundar em funções e tabelas dinâmicas.</span>
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" name="level" id="level-avancado" value="Avançado" class="hidden">
+                            <label for="level-avancado" class="form-radio-card flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg cursor-pointer h-full">
+                                <span class="text-3xl mb-2">●●●</span>
+                                <span class="font-semibold">Avançado</span>
+                                <span class="text-xs text-slate-500 mt-1">Para dominar macros e análise complexa.</span>
+                            </label>
+                        </div>
+                    </div>
+                    <p id="level-error" class="error-message hidden">Por favor, selecione o seu nível de Excel.</p>
+                    <div class="chart-container mt-4">
+                        <canvas id="levelChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Preferences -->
+            <section class="space-y-6 pt-8 border-t-2 border-emerald-200">
+                <h2 class="text-2xl font-semibold text-emerald-800 border-b-2 border-emerald-200 pb-2">2. Suas Preferências</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Qual o seu formato de aula preferencial?</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <input type="radio" name="classFormat" id="format-particular" value="Aula Particular" class="hidden">
+                                <label for="format-particular" class="form-radio-card flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg cursor-pointer h-full">
+                                    <span class="font-semibold">Particular</span>
+                                </label>
+                            </div>
+                            <div>
+                                <input type="radio" name="classFormat" id="format-turma" value="Aula em Turma" class="hidden">
+                                <label for="format-turma" class="form-radio-card flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg cursor-pointer h-full">
+                                    <span class="font-semibold">Em Turma</span>
+                                </label>
+                            </div>
+                        </div>
+                        <p id="classFormat-error" class="error-message hidden">Por favor, selecione o formato da aula.</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Qual o seu horário preferencial?</label>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div>
+                                <input type="radio" name="schedule" id="schedule-manha" value="Manhã" class="hidden">
+                                <label for="schedule-manha" class="form-radio-card flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg cursor-pointer h-full">
+                                    <span class="font-semibold text-sm">Manhã</span>
+                                </label>
+                            </div>
+                            <div>
+                                <input type="radio" name="schedule" id="schedule-tarde" value="Tarde" class="hidden">
+                                <label for="schedule-tarde" class="form-radio-card flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg cursor-pointer h-full">
+                                    <span class="font-semibold text-sm">Tarde</span>
+                                </label>
+                            </div>
+                            <div>
+                                <input type="radio" name="schedule" id="schedule-pos" value="Pós-laboral" class="hidden">
+                                <label for="schedule-pos" class="form-radio-card flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg cursor-pointer h-full">
+                                    <span class="font-semibold text-sm">Pós-laboral</span>
+                                </label>
+                            </div>
+                        </div>
+                        <p id="schedule-error" class="error-message hidden">Por favor, selecione o seu horário preferencial.</p>
+                    </div>
+                </div>
+                <div>
+                    <label for="howHeard" class="block text-sm font-medium text-slate-700 mb-1">Como soube do nosso curso?</label>
+                    <select id="howHeard" name="howHeard" class="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500" required>
+                        <option value="">Selecione uma opção</option>
+                        <option value="Redes Sociais">Redes Sociais</option>
+                        <option value="Pesquisa Online">Pesquisa Online</option>
+                        <option value="Recomendação">Recomendação de um amigo/colega</option>
+                        <option value="Anúncio/Flyer">Anúncio/Flyer</option>
+                        <option value="Outro">Outro</option>
+                    </select>
+                    <p id="howHeard-error" class="error-message hidden">Por favor, selecione como soube do curso.</p>
+                </div>
+                <div>
+                    <label for="motivation" class="block text-sm font-medium text-slate-700 mb-1">O que o(a) motiva a fazer este curso?</label>
+                    <textarea id="motivation" name="motivation" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500" placeholder="Ex: Melhorar habilidades profissionais, gerir finanças pessoais..."></textarea>
+                </div>
+            </section>
+
+            <!-- Section 3: Payment -->
+            <section class="space-y-6 pt-8 border-t-2 border-emerald-200">
+                <h2 class="text-2xl font-semibold text-emerald-800 border-b-2 border-emerald-200 pb-2">3. Confirmação e Pagamento</h2>
+                <div class="bg-slate-100 p-4 rounded-lg space-y-2">
+                    <h3 class="font-semibold text-slate-800">Resumo da sua Inscrição:</h3>
+                    <div id="summary-content" class="text-sm text-slate-700 space-y-1">
+                        <p>Preencha o formulário para ver o resumo da sua inscrição.</p>
+                    </div>
+                </div>
+                <div class="bg-emerald-50 border-l-4 border-emerald-500 text-emerald-800 p-4 rounded-md">
+                    <h3 class="font-bold">Instruções de Pagamento</h3>
+                    <p class="mt-1 text-sm">Para finalizar, pague a taxa de inscrição para o M-Pesa:</p>
+                    <p class="font-semibold text-lg my-2">847875963 - Hanz Domingos</p>
+                    <p class="text-sm">Após o pagamento, anexe o comprovativo abaixo.</p>
+                </div>
+                <div>
+                    <label for="proof" class="block text-sm font-medium text-slate-700 mb-1">Anexe o Comprovativo de Pagamento</label>
+                    <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 border-dashed rounded-md">
+                        <div class="space-y-1 text-center">
+                            <div class="text-6xl text-emerald-400">📁</div>
+                            <div class="flex flex-col items-center text-sm text-slate-600">
+                                <label for="proof" class="relative cursor-pointer bg-white rounded-md font-medium text-emerald-600 hover:text-emerald-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-emerald-500">
+                                    <span>Clique para carregar</span>
+                                    <input id="proof" name="proof" type="file" class="sr-only" required>
+                                </label>
+                                <p class="mt-1">ou arraste e solte o ficheiro aqui</p>
+                            </div>
+                            <p id="fileName" class="text-xs text-slate-500 mt-2">Nenhum ficheiro selecionado. PNG, JPG, PDF até 10MB.</p>
+                        </div>
+                    </div>
+                    <p id="proof-error" class="error-message hidden">Por favor, anexe o comprovativo de pagamento.</p>
+                </div>
+                <div class="flex items-start">
+                    <div class="flex items-center h-5">
+                        <input id="terms" name="terms" type="checkbox" class="focus:ring-emerald-500 h-4 w-4 text-emerald-600 border-slate-300 rounded" required>
+                    </div>
+                    <div class="ml-3 text-sm">
+                        <label for="terms" class="font-medium text-slate-700">Declaro que li e concordo com os <a href="#" class="text-emerald-600 hover:underline">Termos e Condições</a>.</label>
+                    </div>
+                    <p id="terms-error" class="error-message hidden">É necessário aceitar os Termos e Condições.</p>
+                </div>
+            </section>
+
+            <!-- Submit Button -->
+            <div class="flex justify-end pt-6 border-t">
+                <button type="submit" id="submitBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-6 rounded-md transition-all duration-200">
+                    Finalizar Inscrição
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const formData = {
+                fullName: '',
+                email: '',
+                phone: '',
+                level: null,
+                classFormat: null,
+                schedule: null,
+                howHeard: '',
+                motivation: '',
+                proof: null,
+                terms: false
+            };
+
+            const registrationForm = document.getElementById('registration-form');
+            const successMessage = document.getElementById('success-message');
+            const summaryContainer = document.getElementById('summary-content');
+            const fileNameDisplay = document.getElementById('fileName');
+            const submitBtn = document.getElementById('submitBtn');
+
+            // Define the target email address
+            const targetEmail = 'hanzdomingos@gmail.com';
+
+            // Error message elements
+            const errorMessages = {
+                fullName: document.getElementById('fullName-error'),
+                email: document.getElementById('email-error'),
+                phone: document.getElementById('phone-error'),
+                level: document.getElementById('level-error'),
+                classFormat: document.getElementById('classFormat-error'),
+                schedule: document.getElementById('schedule-error'),
+                howHeard: document.getElementById('howHeard-error'),
+                proof: document.getElementById('proof-error'),
+                terms: document.getElementById('terms-error')
+            };
+
+            const inputs = document.querySelectorAll('#registration-form input, #registration-form select, #registration-form textarea');
+            inputs.forEach(input => {
+                input.addEventListener('input', (e) => {
+                    const { name, value, type, checked, files } = e.target;
+                    if (type === 'checkbox') {
+                        formData[name] = checked;
+                    } else if (type === 'radio') {
+                        if(checked) formData[name] = value;
+                    } else if(type === 'file') {
+                        formData[name] = files[0];
+                        fileNameDisplay.textContent = files[0] ? files[0].name : 'Nenhum ficheiro selecionado. PNG, JPG, PDF até 10MB.';
+                    } else {
+                        formData[name] = value;
+                    }
+                    // Hide error message on input
+                    if (errorMessages[name]) {
+                        errorMessages[name].classList.add('hidden');
+                    }
+                    if (name === 'level' && formData.level) {
+                        errorMessages.level.classList.add('hidden');
+                    }
+                    if (name === 'classFormat' && formData.classFormat) {
+                        errorMessages.classFormat.classList.add('hidden');
+                    }
+                    if (name === 'schedule' && formData.schedule) {
+                        errorMessages.schedule.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Chart.js setup
+            const levelRadios = document.querySelectorAll('input[name="level"]');
+            const ctx = document.getElementById('levelChart').getContext('2d');
+            const levelChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Básico', 'Intermediário', 'Avançado'],
+                    datasets: [{
+                        label: 'Complexidade',
+                        data: [25, 60, 100],
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.2)', // emerald-500 with opacity
+                            'rgba(16, 185, 129, 0.2)',
+                            'rgba(16, 185, 129, 0.2)',
+                        ],
+                        borderColor: [
+                            'rgba(16, 185, 129, 1)', // emerald-500
+                            'rgba(16, 185, 129, 1)',
+                            'rgba(16, 185, 129, 1)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    },
+                    scales: {
+                        x: {
+                            display: false,
+                            max: 110
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: {
+                                font: {
+                                    weight: '600'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            levelRadios.forEach(radio => {
+                radio.addEventListener('change', () => {
+                    const selectedLevel = document.querySelector('input[name="level"]:checked').value;
+                    const levelIndex = { 'Básico': 0, 'Intermediário': 1, 'Avançado': 2 }[selectedLevel];
+                    
+                    const backgroundColors = levelChart.data.datasets[0].backgroundColor.map((_, i) => 
+                        i === levelIndex ? 'rgba(5, 150, 105, 0.6)' : 'rgba(16, 185, 129, 0.2)' // emerald-600 for selected
+                    );
+                    const borderColors = levelChart.data.datasets[0].borderColor.map((_, i) =>
+                        i === levelIndex ? 'rgba(5, 150, 105, 1)' : 'rgba(16, 185, 129, 1)' // emerald-600 for selected
+                    );
+
+                    levelChart.data.datasets[0].backgroundColor = backgroundColors;
+                    levelChart.data.datasets[0].borderColor = borderColors;
+                    levelChart.update();
+                });
+            });
+
+            function validateForm() {
+                let isValid = true;
+
+                // Validate Personal Info
+                if (!formData.fullName) {
+                    errorMessages.fullName.classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    errorMessages.fullName.classList.add('hidden');
+                }
+
+                if (!formData.email || !formData.email.includes('@')) {
+                    errorMessages.email.classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    errorMessages.email.classList.add('hidden');
+                }
+
+                if (!formData.phone) {
+                    errorMessages.phone.classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    errorMessages.phone.classList.add('hidden');
+                }
+
+                if (!formData.level) {
+                    errorMessages.level.classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    errorMessages.level.classList.add('hidden');
+                }
+
+                // Validate Preferences
+                if (!formData.classFormat) {
+                    errorMessages.classFormat.classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    errorMessages.classFormat.classList.add('hidden');
+                }
+
+                if (!formData.schedule) {
+                    errorMessages.schedule.classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    errorMessages.schedule.classList.add('hidden');
+                }
+
+                if (!formData.howHeard) {
+                    errorMessages.howHeard.classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    errorMessages.howHeard.classList.add('hidden');
+                }
+
+                // Validate Payment
+                if (!formData.proof) {
+                    errorMessages.proof.classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    errorMessages.proof.classList.add('hidden');
+                }
+
+                if (!formData.terms) {
+                    errorMessages.terms.classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    errorMessages.terms.classList.add('hidden');
+                }
+
+                return isValid;
+            }
+            
+            function updateSummary() {
+                summaryContainer.innerHTML = `
+                    <p><strong>Nome:</strong> ${formData.fullName || 'Não preenchido'}</p>
+                    <p><strong>Email:</strong> ${formData.email || 'Não preenchido'}</p>
+                    <p><strong>Telefone:</strong> ${formData.phone || 'Não preenchido'}</p>
+                    <p><strong>Nível Escolhido:</strong> ${formData.level || 'Não selecionado'}</p>
+                    <p><strong>Formato da Aula:</strong> ${formData.classFormat || 'Não selecionado'}</p>
+                    <p><strong>Horário:</strong> ${formData.schedule || 'Não selecionado'}</p>
+                    <p><strong>Como Soube:</strong> ${formData.howHeard || 'Não selecionado'}</p>
+                    <p><strong>Motivação:</strong> ${formData.motivation || 'Não preenchida'}</p>
+                `;
+            }
+
+            registrationForm.addEventListener('submit', async (e) => {
+                e.preventDefault(); 
+
+                if (validateForm()) {
+                    submitBtn.textContent = 'A Enviar...';
+                    submitBtn.classList.add('submit-button-loading');
+                    submitBtn.disabled = true;
+
+                    // Prepare data for sending
+                    const dataToSend = {
+                        to: targetEmail,
+                        subject: `Nova Inscrição no Curso de Excel de ${formData.fullName}`,
+                        body: `
+                            Detalhes da Inscrição:
+                            Nome Completo: ${formData.fullName}
+                            Email: ${formData.email}
+                            Telefone: ${formData.phone}
+                            Nível de Excel: ${formData.level}
+                            Formato da Aula: ${formData.classFormat}
+                            Horário Preferencial: ${formData.schedule}
+                            Como Soube do Curso: ${formData.howHeard}
+                            Motivação: ${formData.motivation || 'N/A'}
+                            Termos e Condições Aceites: ${formData.terms ? 'Sim' : 'Não'}
+                        `
+                    };
+
+                    // Simulate network delay for email sending
+                    await new Promise(resolve => setTimeout(resolve, 1500)); 
+
+                    // Log data to console (simulating email sending)
+                    console.log('Dados do formulário prontos para envio por email:', dataToSend);
+                    console.log(`Um e-mail seria enviado para: ${targetEmail}`);
+
+                    // --- Placeholder for actual email sending via a backend service ---
+                    /*
+                    try {
+                        const response = await fetch('/api/send-email', { // Replace with your backend endpoint
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(dataToSend),
+                        });
+
+                        if (response.ok) {
+                            console.log('E-mail enviado com sucesso!');
+                        } else {
+                            console.error('Falha ao enviar e-mail:', response.statusText);
+                            // Handle error, e.g., show an error message to the user
+                        }
+                    } catch (error) {
+                        console.error('Erro de rede ao tentar enviar e-mail:', error);
+                        // Handle network error
+                    }
+                    */
+                    // --- End of placeholder ---
+
+                    // Show success message and hide form
+                    registrationForm.classList.add('hidden');
+                    successMessage.classList.remove('hidden');
+                    
+                    // Update the email in the success message
+                    successMessage.querySelector('span').textContent = targetEmail;
+
+                    // Reset the form and chart state
+                    registrationForm.reset();
+                    fileNameDisplay.textContent = 'Nenhum ficheiro selecionado. PNG, JPG, PDF até 10MB.';
+                    formData.level = null;
+                    formData.classFormat = null;
+                    formData.schedule = null;
+                    formData.terms = false;
+                    formData.proof = null;
+                    levelChart.data.datasets[0].backgroundColor = levelChart.data.datasets[0].backgroundColor.map(() => 'rgba(16, 185, 129, 0.2)'); 
+                    levelChart.data.datasets[0].borderColor = levelChart.data.datasets[0].borderColor.map(() => 'rgba(16, 185, 129, 1)'); 
+                    levelChart.update();
+
+                } else {
+                    // If validation fails, update summary to show current (possibly incomplete) data
+                    updateSummary();
+                    // Scroll to the first error or top of the form
+                    const firstError = document.querySelector('.error-message:not(.hidden)');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+
+            // Update summary dynamically as user types/selects
+            inputs.forEach(input => {
+                input.addEventListener('input', updateSummary);
+                input.addEventListener('change', updateSummary); 
+            });
+
+            // Initial update of summary on load
+            updateSummary();
+        });
+    </script>
+</body>
+</html>
