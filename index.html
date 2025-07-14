@@ -104,7 +104,7 @@
             color: #059669; /* emerald-600 */
             margin-bottom: 1rem;
         }
-        .professor-section {
+        .professor-section, .methodology-section { /* Apply similar styling to new section */
             background-color: #f0fdf4; /* emerald-50 */
             border-radius: 1.5rem;
             padding: 3rem;
@@ -267,9 +267,7 @@
             <p class="text-xl md:text-2xl opacity-90 mb-10 animate-fade-in-up delay-200">
                 Transforme números em narrativas de sucesso e impulsione a sua carreira.
             </p>
-            <a href="#registration-section" class="cta-button animate-fade-in-up delay-400">
-                Inscreva-se Agora
-            </a>
+            <!-- Removed the first "Inscreva-se Agora" button -->
         </div>
     </section>
 
@@ -320,6 +318,22 @@
                         <p><strong>Portfólio:</strong> <a href="https://mh-boy23.github.io/Hanzdomingos/" target="_blank" class="footer-link">mh-boy23.github.io/Hanzdomingos/</a></p>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- Methodology Section -->
+        <section class="text-center methodology-section">
+            <h2 class="section-heading">Metodologia de Ensino</h2>
+            <div class="max-w-2xl mx-auto text-left">
+                <p class="text-lg text-slate-700 mb-4">
+                    As aulas serão ministradas através do <span class="font-semibold text-emerald-700">Google Classroom</span>, proporcionando um ambiente de aprendizagem moderno e interativo. Terá acesso a materiais de apoio, exercícios práticos e comunicação direta com o professor, garantindo uma experiência de estudo flexível e eficaz.
+                </p>
+                <p class="text-lg text-slate-700 mb-4">
+                    A metodologia foca-se na prática, com exemplos reais e desafios que o(a) ajudarão a aplicar os conhecimentos de Excel no seu dia-a-dia profissional e pessoal.
+                </p>
+                <p class="text-lg font-semibold text-emerald-800">
+                    No final do curso, será oferecido um <span class="text-2xl">Certificado de Participação</span>, reconhecendo o seu empenho e as novas competências adquiridas.
+                </p>
             </div>
         </section>
 
@@ -390,6 +404,18 @@
                             </div>
                         </div>
                         <p id="level-error" class="error-message hidden">Por favor, selecione o seu nível de Excel.</p>
+                        
+                        <!-- Pricing Packages Display -->
+                        <div class="bg-emerald-50 border-l-4 border-emerald-500 text-emerald-800 p-4 rounded-md mt-6">
+                            <h3 class="font-bold text-lg mb-2">Pacotes de Preços:</h3>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li><strong>Básico:</strong> 2.000,00 MT</li>
+                                <li><strong>Intermédio:</strong> 3.000,00 MT</li>
+                                <li><strong>Avançado:</strong> 5.000,00 MT</li>
+                            </ul>
+                            <p class="mt-2 text-xs text-emerald-700">O valor será exibido no resumo da sua inscrição.</p>
+                        </div>
+
                         <div class="chart-container mt-4">
                             <canvas id="levelChart"></canvas>
                         </div>
@@ -505,17 +531,6 @@
             </form>
         </section>
 
-        <!-- Final Call to Action -->
-        <section class="text-center py-12 bg-emerald-50 rounded-xl shadow-inner">
-            <h2 class="text-3xl font-bold text-emerald-800 mb-6">Pronto para Dominar o Excel?</h2>
-            <p class="text-lg text-slate-700 mb-8">
-                Junte-se ao Professor Hanz Domingos e comece a sua transformação hoje mesmo!
-            </p>
-            <a href="#registration-section" class="cta-button">
-                Inscreva-se Já!
-            </a>
-        </section>
-
     </main>
 
     <!-- Footer -->
@@ -526,6 +541,13 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Define pricing for each level
+            const pricing = {
+                'Básico': '2.000,00 MT',
+                'Intermediário': '3.000,00 MT',
+                'Avançado': '5.000,00 MT'
+            };
+
             const formData = {
                 fullName: '',
                 email: '',
@@ -535,20 +557,17 @@
                 schedule: null,
                 howHeard: '',
                 motivation: '',
-                // Removed proof from formData as it's no longer a file input
             };
 
             const registrationForm = document.getElementById('registration-form');
-            const successMessage = document.getElementById('success-message'); // Added back for in-page success
+            const successMessage = document.getElementById('success-message'); 
             const summaryContainer = document.getElementById('summary-content');
             const submitBtn = document.getElementById('submitBtn');
-            const resetFormBtn = document.getElementById('resetFormBtn'); // New button for resetting form
+            const resetFormBtn = document.getElementById('resetFormBtn'); 
 
-            // Define the target email address for Formspree
             const formspreeEndpoint = 'https://formspree.io/f/movlakpo';
             const targetEmail = 'hanzdomingos@gmail.com'; 
 
-            // Error message elements
             const errorMessages = {
                 fullName: document.getElementById('fullName-error'),
                 email: document.getElementById('email-error'),
@@ -569,7 +588,6 @@
                     } else { 
                         formData[name] = value;
                     }
-                    // Hide error message on input
                     if (errorMessages[name]) {
                         errorMessages[name].classList.add('hidden');
                     }
@@ -585,7 +603,6 @@
                 });
             });
 
-            // Chart.js setup
             const levelRadios = document.querySelectorAll('input[name="level"]');
             const ctx = document.getElementById('levelChart').getContext('2d');
             const levelChart = new Chart(ctx, {
@@ -596,12 +613,12 @@
                         label: 'Complexidade',
                         data: [25, 60, 100],
                         backgroundColor: [
-                            'rgba(16, 185, 129, 0.2)', /* emerald-500 with opacity */
+                            'rgba(16, 185, 129, 0.2)', 
                             'rgba(16, 185, 129, 0.2)',
                             'rgba(16, 185, 129, 0.2)',
                         ],
                         borderColor: [
-                            'rgba(16, 185, 129, 1)', /* emerald-500 */
+                            'rgba(16, 185, 129, 1)', 
                             'rgba(16, 185, 129, 1)',
                             'rgba(16, 185, 129, 1)',
                         ],
@@ -639,10 +656,10 @@
                     const levelIndex = { 'Básico': 0, 'Intermediário': 1, 'Avançado': 2 }[selectedLevel];
                     
                     const backgroundColors = levelChart.data.datasets[0].backgroundColor.map((_, i) => 
-                        i === levelIndex ? 'rgba(5, 150, 105, 0.6)' : 'rgba(16, 185, 129, 0.2)' /* emerald-600 for selected */
+                        i === levelIndex ? 'rgba(5, 150, 105, 0.6)' : 'rgba(16, 185, 129, 0.2)' 
                     );
                     const borderColors = levelChart.data.datasets[0].borderColor.map((_, i) =>
-                        i === levelIndex ? 'rgba(5, 150, 105, 1)' : 'rgba(16, 185, 129, 1)' /* emerald-600 for selected */
+                        i === levelIndex ? 'rgba(5, 150, 105, 1)' : 'rgba(16, 185, 129, 1)' 
                     );
 
                     levelChart.data.datasets[0].backgroundColor = backgroundColors;
@@ -654,7 +671,6 @@
             function validateForm() {
                 let isValid = true;
 
-                // Validate Personal Info
                 if (!formData.fullName) {
                     errorMessages.fullName.classList.remove('hidden');
                     isValid = false;
@@ -683,7 +699,6 @@
                     errorMessages.level.classList.add('hidden');
                 }
 
-                // Validate Preferences
                 if (!formData.classFormat) {
                     errorMessages.classFormat.classList.remove('hidden');
                     isValid = false;
@@ -705,20 +720,19 @@
                     errorMessages.howHeard.classList.add('hidden');
                 }
 
-                // For payment proof, since it's only WhatsApp, we assume the user will handle it.
-                // If you want to force a confirmation, you would need a checkbox here.
-                // For now, no validation is applied to this specific item.
-                errorMessages.proof.classList.add('hidden'); // Always hide as it's not a direct input for validation
+                errorMessages.proof.classList.add('hidden'); 
 
                 return isValid;
             }
             
             function updateSummary() {
+                const selectedLevelPrice = formData.level ? pricing[formData.level] : 'Não selecionado';
                 summaryContainer.innerHTML = `
                     <p><strong>Nome:</strong> ${formData.fullName || 'Não preenchido'}</p>
                     <p><strong>Email:</strong> ${formData.email || 'Não preenchido'}</p>
                     <p><strong>Telefone:</strong> ${formData.phone || 'Não preenchido'}</p>
                     <p><strong>Nível Escolhido:</strong> ${formData.level || 'Não selecionado'}</p>
+                    <p><strong>Preço do Curso:</strong> ${selectedLevelPrice}</p>
                     <p><strong>Formato da Aula:</strong> ${formData.classFormat || 'Não selecionado'}</p>
                     <p><strong>Horário:</strong> ${formData.schedule || 'Não selecionado'}</p>
                     <p><strong>Como Soube:</strong> ${formData.howHeard || 'Não selecionado'}</p>
@@ -728,31 +742,29 @@
             }
 
             registrationForm.addEventListener('submit', async (e) => { 
-                e.preventDefault(); // Prevent default form submission
+                e.preventDefault(); 
 
                 if (!validateForm()) {
-                    // Scroll to the first error or top of the form
                     const firstError = document.querySelector('.error-message:not(.hidden)');
                     if (firstError) {
                         firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
-                    updateSummary(); // Update summary with current (possibly incomplete) data
-                    return; // Stop execution
+                    updateSummary(); 
+                    return; 
                 }
 
-                // If validation passes, proceed with submission
                 submitBtn.textContent = 'A Enviar...';
                 submitBtn.classList.add('submit-button-loading');
                 submitBtn.disabled = true;
 
-                // Prepare data for Formspree using FormData
                 const data = new FormData();
                 for (const key in formData) {
                     if (formData[key] !== null) {
                         data.append(key, formData[key]);
                     }
                 }
-                // Add Formspree specific fields
+                // Add selected level price to form data for email
+                data.append('Preço do Curso', pricing[formData.level]);
                 data.append('_replyto', formData.email);
                 data.append('_subject', `Nova Inscrição no Curso de Excel de ${formData.fullName}`);
 
@@ -761,7 +773,7 @@
                         method: 'POST',
                         body: data,
                         headers: {
-                            'Accept': 'application/json' // Important for Formspree's JSON response
+                            'Accept': 'application/json' 
                         }
                     });
 
@@ -769,20 +781,17 @@
                         console.log('Formulário enviado com sucesso para Formspree!');
                         registrationForm.classList.add('hidden');
                         successMessage.classList.remove('hidden');
-                        // Scroll to success message
                         successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        
-                        // Update the email in the success message
                         successMessage.querySelector('span').textContent = targetEmail;
 
                     } else {
                         const errorData = await response.json();
                         console.error('Falha ao enviar formulário para Formspree:', errorData);
-                        alert('Ocorreu um erro ao enviar a sua inscrição. Por favor, tente novamente.'); // Use alert for simplicity, consider custom modal
+                        alert('Ocorreu um erro ao enviar a sua inscrição. Por favor, tente novamente.'); 
                     }
                 } catch (error) {
                     console.error('Erro de rede ao tentar enviar formulário:', error);
-                    alert('Ocorreu um erro de rede. Verifique a sua ligação e tente novamente.'); // Use alert for simplicity, consider custom modal
+                    alert('Ocorreu um erro de rede. Verifique a sua ligação e tente novamente.'); 
                 } finally {
                     submitBtn.textContent = 'Finalizar Inscrição';
                     submitBtn.classList.remove('submit-button-loading');
@@ -790,41 +799,34 @@
                 }
             });
 
-            // Reset form button functionality
             resetFormBtn.addEventListener('click', () => {
                 registrationForm.reset();
-                // Reset formData object
                 for (const key in formData) {
                     formData[key] = null;
                 }
-                formData.fullName = ''; // Explicitly reset strings
+                formData.fullName = ''; 
                 formData.email = '';
                 formData.phone = '';
                 formData.motivation = '';
                 formData.howHeard = '';
 
-                // Reset radio selections visually
                 document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
                 
-                // Reset chart highlight
                 levelChart.data.datasets[0].backgroundColor = levelChart.data.datasets[0].backgroundColor.map(() => 'rgba(16, 185, 129, 0.2)'); 
                 levelChart.data.datasets[0].borderColor = levelChart.data.datasets[0].borderColor.map(() => 'rgba(16, 185, 129, 1)'); 
                 levelChart.update();
 
-                // Hide success message and show form
                 successMessage.classList.add('hidden');
                 registrationForm.classList.remove('hidden');
-                updateSummary(); // Update summary to initial state
-                window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top of the page
+                updateSummary(); 
+                window.scrollTo({ top: 0, behavior: 'smooth' }); 
             });
 
-            // Update summary dynamically as user types/selects
             inputs.forEach(input => {
                 input.addEventListener('input', updateSummary);
                 input.addEventListener('change', updateSummary); 
             });
 
-            // Initial update of summary on load
             updateSummary();
         });
     </script>
